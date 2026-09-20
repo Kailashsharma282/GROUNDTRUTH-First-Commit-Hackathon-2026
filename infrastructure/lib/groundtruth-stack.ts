@@ -294,6 +294,11 @@ export class GroundTruthStack extends cdk.Stack {
       description: 'SageMaker AI Inference Endpoint'
     });
 
+    new cdk.CfnOutput(this, 'SageMakerRoleArn', {
+      value: sagemakerConstruct.executionRole.roleArn,
+      description: 'SageMaker Execution Role ARN'
+    });
+
     new cdk.CfnOutput(this, 'StepFunctionsArn', {
       value: stepFunctionsConstruct.stateMachine.stateMachineArn,
       description: 'Step Functions State Machine ARN'
