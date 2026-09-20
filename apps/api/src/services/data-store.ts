@@ -37,6 +37,22 @@ class DataStore {
     });
   }
 
+  public getAllFindings(): Finding[] {
+    return this.findings;
+  }
+
+  public getAllPolicies(): Policy[] {
+    return this.policies;
+  }
+
+  public getAllActions(): CorrectiveAction[] {
+    return this.actions;
+  }
+
+  public getAllAuditLogs(): AuditLogEntry[] {
+    return this.auditLogs;
+  }
+
   public addAuditLog(
     eventType: AuditLogEntry['eventType'],
     actor: string,
