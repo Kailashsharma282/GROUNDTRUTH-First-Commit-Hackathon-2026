@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { api } from '../services/api.js';
 import { Policy, Category } from '@groundtruth/shared';
 import { useAuth } from '../contexts/AuthContext.js';
@@ -273,14 +273,15 @@ export const PoliciesPage: React.FC = () => {
 };
 
 export const PolicyDetailPage: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
   const [policy, setPolicy] = useState<Policy | null>(null);
 
   useEffect(() => {
-    // Default to the first seed policy or fetch
-    api.getPolicyById('pol-emergency-01').then((p) => {
+    const targetId = id || 'pol-emergency-01';
+    api.getPolicyById(targetId).then((p) => {
       if (p) setPolicy(p);
     });
-  }, []);
+  }, [id]);
 
   if (!policy) {
     return <div className="text-cyan-400 font-mono text-xs">Loading Policy Details...</div>;

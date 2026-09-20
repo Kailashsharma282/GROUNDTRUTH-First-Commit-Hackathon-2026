@@ -146,6 +146,8 @@ export const FindingDetailPage: React.FC = () => {
   const navigate = useNavigate();
   const [finding, setFinding] = useState<Finding | null>(null);
 
+  const [duplicateDismissed, setDuplicateDismissed] = useState<boolean>(false);
+
   useEffect(() => {
     if (id) {
       api.getFindingById(id).then((f) => {
@@ -183,7 +185,7 @@ export const FindingDetailPage: React.FC = () => {
       </div>
 
       {/* Duplicate Detection Alert (Requirement 27) */}
-      {finding.possibleDuplicates && finding.possibleDuplicates.length > 0 && (
+      {!duplicateDismissed && finding.possibleDuplicates && finding.possibleDuplicates.length > 0 && (
         <div className="p-4 rounded-xl bg-purple-950/40 border border-purple-500/40 space-y-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2 text-xs font-mono text-purple-300 font-bold">
@@ -198,10 +200,16 @@ export const FindingDetailPage: React.FC = () => {
             Similar finding recorded previously at <strong>{finding.possibleDuplicates[0].location}</strong>. Compare findings to avoid redundant work orders.
           </p>
           <div className="flex items-center space-x-2 pt-1">
-            <button className="px-3 py-1 rounded bg-purple-600 hover:bg-purple-500 text-white font-mono text-xs font-semibold">
+            <button
+              onClick={() => navigate(`/findings/${finding.possibleDuplicates![0].findingId}`)}
+              className="px-3 py-1 rounded bg-purple-600 hover:bg-purple-500 text-white font-mono text-xs font-semibold transition"
+            >
               Review Match
             </button>
-            <button className="px-3 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono text-xs">
+            <button
+              onClick={() => setDuplicateDismissed(true)}
+              className="px-3 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono text-xs transition"
+            >
               Keep Separate
             </button>
           </div>
