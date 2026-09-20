@@ -177,9 +177,16 @@ export class GroundTruthStack extends cdk.Stack {
     inspectionQueue.grantSendMessages(apiLambda);
     eventBus.grantPutEventsTo(apiLambda);
     criticalAlertTopic.grantPublish(apiLambda);
+
     apiLambda.addToRolePolicy(new iam.PolicyStatement({
       actions: ['sagemaker:InvokeEndpoint'],
       resources: [`arn:aws:sagemaker:${this.region}:${this.account}:endpoint/${sagemakerConstruct.endpointName}`]
+    }));
+
+    // Grant Step Functions execution permission to Lambda via ARN wildcard to avoid circular role dependencies
+    apiLambda.addToRolePolicy(new iam.PolicyStatement({
+      actions: ['states:StartExecution', 'states:DescribeExecution', 'states:GetExecutionHistory'],
+      resources: [`arn:aws:states:${this.region}:${this.account}:stateMachine:*`]
     }));
 
     // 9. AWS Step Functions Inspection Pipeline Construct
@@ -188,8 +195,6 @@ export class GroundTruthStack extends cdk.Stack {
       findingsTable,
       criticalAlertTopic
     });
-
-    stepFunctionsConstruct.stateMachine.grantStartExecution(apiLambda);
 
     // 10. Amazon API Gateway HTTP API
     const httpApi = new apigatewayv2.HttpApi(this, 'HttpApiGateway', {
@@ -225,18 +230,41 @@ export class GroundTruthStack extends cdk.Stack {
     dashboard.addWidgets(
       new cloudwatch.GraphWidget({
         title: 'API Gateway Invocations & Latency',
-        left: [httpApi.metricLatency()],
-        right: [httpApi.metricCount()]
+        left: [
+          new cloudwatch.Metric({
+            namespace: 'AWS/ApiGateway',
+            metricName: 'Latency',
+            dimensionsMap: { ApiId: httpApi.apiId },
+            statistic: 'Average'
+          })
+        ],
+        right: [
+          new cloudwatch.Metric({
+            namespace: 'AWS/ApiGateway',
+            metricName: 'Count',
+            dimensionsMap: { ApiId: httpApi.apiId },
+            statistic: 'SampleCount'
+          })
+        ]
       }),
       new cloudwatch.GraphWidget({
         title: 'Lambda Executions & Errors',
-        left: [apiLambda.metricInvocations()],
-        right: [apiLambda.metricErrors()]
-      }),
-      new cloudwatch.GraphWidget({
-        title: 'Step Functions Executions',
-        left: [stepFunctionsConstruct.stateMachine.metricStarted(), stepFunctionsConstruct.stateMachine.metricSucceeded()],
-        right: [stepFunctionsConstruct.stateMachine.metricFailed()]
+        left: [
+          new cloudwatch.Metric({
+            namespace: 'AWS/Lambda',
+            metricName: 'Invocations',
+            dimensionsMap: { FunctionName: apiLambda.functionName },
+            statistic: 'Sum'
+          })
+        ],
+        right: [
+          new cloudwatch.Metric({
+            namespace: 'AWS/Lambda',
+            metricName: 'Errors',
+            dimensionsMap: { FunctionName: apiLambda.functionName },
+            statistic: 'Sum'
+          })
+        ]
       })
     );
 

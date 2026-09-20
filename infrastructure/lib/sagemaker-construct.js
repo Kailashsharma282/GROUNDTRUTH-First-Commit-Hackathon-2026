@@ -44,13 +44,13 @@ class SageMakerConstruct extends constructs_1.Construct {
                 }
             ]
         });
-        endpointConfig.addDependency(model);
+        endpointConfig.addResourceDependency(model);
         // SageMaker Real-Time Endpoint
         this.endpoint = new sagemaker.CfnEndpoint(this, 'VisionReasonerEndpoint', {
             endpointName: this.endpointName,
             endpointConfigName: endpointConfig.endpointConfigName
         });
-        this.endpoint.addDependency(endpointConfig);
+        this.endpoint.addResourceDependency(endpointConfig);
     }
 }
 exports.SageMakerConstruct = SageMakerConstruct;
