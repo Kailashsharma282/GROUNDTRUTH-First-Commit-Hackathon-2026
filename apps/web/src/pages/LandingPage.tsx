@@ -71,7 +71,7 @@ export const LandingPage: React.FC = () => {
           </div>
 
           {/* Signature Hero Visual: POLICY vs REALITY */}
-          <div className="max-w-5xl mx-auto mt-6">
+          <div id="solution" className="max-w-5xl mx-auto mt-6 pt-4">
             <RealityGapVisualizer
               expected="Emergency exits and designated egress pathways must remain unobstructed at all times across a minimum width of 1.2 meters."
               observed="Stack of 4 shipping crates and packing materials obstructing ~70% of doorway threshold. Egress width reduced to 0.38 meters."
@@ -195,7 +195,7 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* AWS Cloud Architecture Banner */}
-      <section className="py-16 bg-slate-950 border-y border-slate-800">
+      <section id="architecture" className="py-16 bg-slate-950 border-y border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-center justify-between gap-8">
           <div>
             <div className="flex items-center space-x-2 text-xs font-mono text-cyan-400 font-bold uppercase mb-2">
