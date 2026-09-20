@@ -75,14 +75,20 @@ def create_demo_mp4():
     print(f"Narration Audio Duration: {duration:.2f} seconds (~{int(duration // 60)}m {int(duration % 60)}s)")
 
     brain_dir = r"C:\Users\kaila\.gemini\antigravity-ide\brain\5ce25624-85cf-4a46-bc5b-34dccf92eb44"
-    webp_files = [os.path.join(brain_dir, f) for f in os.listdir(brain_dir) if f.startswith("groundtruth_live_demo") and f.endswith(".webp")]
+    webp_files = [
+        os.path.join(brain_dir, f) 
+        for f in os.listdir(brain_dir) 
+        if f.endswith(".webp") and "groundtruth" in f
+    ]
+    # Sort by modification time to pick the freshest live demonstration recording
+    webp_files.sort(key=lambda p: os.path.getmtime(p), reverse=True)
     
     output_mp4_root = r"c:\Users\kaila\OneDrive\Desktop\Projects\GROUNDTRUTH-first-commit-hackathon\groundtruth_3min_live_demo.mp4"
     output_mp4_artifact = os.path.join(brain_dir, "groundtruth_3min_live_demo.mp4")
 
     if webp_files:
         webp_path = webp_files[0]
-        print(f"Source WebP video found: {webp_path}")
+        print(f"Source WebP video selected: {webp_path}")
         
         cmd = [
             ffmpeg_exe, "-y",
