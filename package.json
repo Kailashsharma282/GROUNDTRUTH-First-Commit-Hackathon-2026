@@ -1,0 +1,29 @@
+{
+  "name": "groundtruth",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "GroundTruth — AI-Powered Reality Verification Platform on AWS",
+  "author": "Pochiraju Kailash Ram Markandeya Sharma (@kailashsharma) - Team KGP_unknown_Coder_404",
+  "workspaces": [
+    "shared",
+    "apps/web",
+    "apps/api",
+    "infrastructure"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=apps/web",
+    "dev:api": "npm run dev --workspace=apps/api",
+    "build": "npm run build --workspaces",
+    "test": "npm run test --workspaces",
+    "test:e2e": "node scripts/run-e2e-demo.js",
+    "lint": "npm run lint --workspaces",
+    "typecheck": "npm run typecheck --workspaces",
+    "synth": "npm run synth --workspace=infrastructure",
+    "seed": "node scripts/seed-data.js",
+    "smoke-test": "node scripts/smoke-test.js"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5"
+  }
+}

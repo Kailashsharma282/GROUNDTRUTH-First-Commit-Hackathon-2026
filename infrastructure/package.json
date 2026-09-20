@@ -1,0 +1,24 @@
+{
+  "name": "@groundtruth/infrastructure",
+  "version": "1.0.0",
+  "bin": {
+    "groundtruth-infra": "bin/app.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "typecheck": "tsc --noEmit",
+    "cdk": "cdk",
+    "synth": "cdk synth"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.12",
+    "aws-cdk": "^2.143.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "^2.143.0",
+    "constructs": "^10.3.0"
+  }
+}
